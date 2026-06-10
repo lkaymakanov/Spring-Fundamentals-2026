@@ -22,15 +22,5 @@ public class AuthService {
 
 
 
-    public User registerUser(User user) {
 
-        if (userRepo.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(UserRole.USER);
-
-        return userRepo.save(user);
-    }
 }
