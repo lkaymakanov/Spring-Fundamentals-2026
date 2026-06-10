@@ -1,10 +1,13 @@
 package app.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.UUID;
 
 @Entity
 @Table(name = "books")
+@Data
 public class Book {
 
     @Id

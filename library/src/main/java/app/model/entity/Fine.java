@@ -1,12 +1,14 @@
 package app.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "fines")
+@Data
 public class Fine {
 
     @Id

@@ -1,6 +1,7 @@
 package app.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "borrow_records")
+@Data
 public class BorrowRecord {
 
     @Id
