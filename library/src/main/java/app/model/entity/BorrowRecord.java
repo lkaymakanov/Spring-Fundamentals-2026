@@ -22,6 +22,7 @@ public class BorrowRecord {
     @ManyToOne
     private Book book;
 
+
     private LocalDateTime borrowDate;
     private LocalDateTime dueDate;
     private LocalDateTime returnDate;

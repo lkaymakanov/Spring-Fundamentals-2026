@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -36,11 +37,8 @@ public class BorrowService {
     @Transactional
     public String borrowBook(UUID userId, UUID bookId) {
 
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Book book = bookRepo.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Book book = bookRepo.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
 
         if (book.getCopiesAvailable() <= 0) {
             return "No copies available";
@@ -65,8 +63,7 @@ public class BorrowService {
     @Transactional
     public String returnBook(UUID borrowId) {
 
-        BorrowRecord record = borrowRepo.findById(borrowId)
-                .orElseThrow(() -> new RuntimeException("Borrow record not found"));
+        BorrowRecord record = borrowRepo.findById(borrowId).orElseThrow(() -> new RuntimeException("Borrow record not found"));
 
         if (!(record.getStatus() == BORROWED)) {
             return "Book already returned";
@@ -90,7 +87,7 @@ public class BorrowService {
 
             Fine fine = new Fine();
             fine.setBorrowRecord(record);
-            fine.setAmount(fineAmount);
+            fine.setAmount(BigDecimal.valueOf(fineAmount));
             fine.setPaid(false);
 
             fineRepo.save(fine);

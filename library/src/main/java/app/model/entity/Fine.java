@@ -3,6 +3,7 @@ package app.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class Fine {
 
     @OneToOne
     private BorrowRecord borrowRecord;
-    private Double amount;
+    private BigDecimal amount;
     private Boolean paid = false;
     private LocalDateTime createdAt = LocalDateTime.now();
 }

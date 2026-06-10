@@ -3,6 +3,7 @@ package app.service;
 import app.model.entity.User;
 import app.repository.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +14,17 @@ public class UserService {
 
     private final UserRepository userRepo;
 
+    @Autowired
     public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
+    public User getById(UUID id) {
+        User user = userRepo.findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("User with id [%s] does not exist.".formatted(id)));
+        return  user; //UserMapper.toUserDto(user);
+    }
 
 
     public User getUserById(UUID id) {

@@ -28,5 +28,7 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    private boolean active = true;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 }
