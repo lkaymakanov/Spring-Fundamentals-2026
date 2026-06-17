@@ -1,9 +1,14 @@
 package app.service;
 
+import app.mapper.UserMapper;
+import app.model.dto.UserDto;
+import app.model.dto.UserLoginRequest;
+import app.model.dto.UserRegisterRequest;
 import app.model.entity.User;
 import app.model.entity.UserRole;
 import app.repository.UserRepository;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,11 +36,11 @@ public class UserService {
     }
 
 
-    public User getById(UUID id) {
+    public UserDto getById(UUID id) {
         User user = userRepo.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("User with id [%s] does not exist.".formatted(id)));
-        return  user; //UserMapper.toUserDto(user);
+        return  UserMapper.toUserDto(user);
     }
 
 
@@ -45,7 +50,6 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-
         if (userRepo.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
@@ -66,5 +70,13 @@ public class UserService {
 
     public void deleteUser(UUID id) {
         userRepo.deleteById(id);
+    }
+
+    public UserDto login(UserLoginRequest userLoginRequest) {
+        return null;
+    }
+
+    public void register(@Valid UserRegisterRequest userRegisterRequest) {
+
     }
 }

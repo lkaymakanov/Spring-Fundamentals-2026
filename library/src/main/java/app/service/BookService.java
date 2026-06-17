@@ -22,18 +22,16 @@ public class BookService {
                 .orElseThrow(() -> new RuntimeException("Book not found"));
     }
 
+
     public List<Book> getAllBooks() {
         return bookRepo.findAll();
     }
-
     public Book saveBook(Book book) {
         return bookRepo.save(book);
     }
-
     public void deleteBook(UUID id) {
         bookRepo.deleteById(id);
     }
-
     public List<Book> searchByTitle(String title) {
         return bookRepo.findByTitleContainingIgnoreCase(title);
     }

@@ -2,6 +2,7 @@ package app.security;
 
 //import app.model.dto.user.UserDto;
 //import app.service.user.UserService;
+import app.model.dto.UserDto;
 import app.model.entity.User;
 import app.model.entity.UserRole;
 import app.service.UserService;
@@ -52,7 +53,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        User user = userService.getById(userId);
+        UserDto user = userService.getById(userId);
 
         if (!user.isActive()) {
             session.invalidate();
