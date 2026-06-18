@@ -1,8 +1,11 @@
 package app.web;
 
+import app.component.CurrentUserHelper;
 import app.model.dto.UserDto;
 import app.model.dto.UserLoginRequest;
 import app.model.dto.UserRegisterRequest;
+import app.model.entity.Book;
+import app.service.BookService;
 import app.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,16 +16,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
 public class IndexController {
 
     private final UserService userService;
+    private final BookService bookService;
+    private final CurrentUserHelper currentUserHelper;
 
-
-    public IndexController(UserService userService) {
+    public IndexController(UserService userService, BookService bookService, CurrentUserHelper currentUserHelper) {
+        this.bookService = bookService;
         this.userService = userService;
+        this.currentUserHelper = currentUserHelper;
     }
 
     @GetMapping("/")
@@ -84,7 +91,7 @@ public class IndexController {
         return new ModelAndView("redirect:/login");
     }
 
-    @GetMapping("/home")
+    /*@GetMapping("/home")
     public ModelAndView getHomePage(HttpSession httpSession) {
 
         UUID userUUID = (UUID) httpSession.getAttribute("user_id");
@@ -94,6 +101,24 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("user", user);
 
+        return modelAndView;
+    }*/
+
+    @GetMapping("/home")
+    public ModelAndView getHomePage(HttpSession httpSession) {
+
+        UUID userUUID = (UUID) httpSession.getAttribute("user_id");
+
+        UserDto user = userService.getById(userUUID);
+
+        List<Book> allBooks = bookService.getAllBooks();
+
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("books", allBooks);
+        modelAndView.addObject("borrowedCount", 0);
+        modelAndView.addObject("dueSoonCount", 0);
+        modelAndView.addObject("isAdmin", currentUserHelper.isAdmin(httpSession));
         return modelAndView;
     }
 

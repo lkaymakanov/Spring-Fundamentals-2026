@@ -1,5 +1,7 @@
 package app.service;
 
+import app.exception.InvalidCredentialsException;
+import app.exception.UsernameAlreadyExistsException;
 import app.mapper.UserMapper;
 import app.model.dto.UserDto;
 import app.model.dto.UserLoginRequest;
@@ -9,11 +11,14 @@ import app.model.entity.UserRole;
 import app.repository.UserRepository;
 
 import jakarta.validation.Valid;
+import org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,7 +54,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User registerUser(User user) {
+    /*public User registerUser(User user) {
         if (userRepo.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
@@ -58,7 +63,7 @@ public class UserService {
         user.setRole(UserRole.USER);
 
         return userRepo.save(user);
-    }
+    }*/
 
     public List<User> getAllUsers() {
         return userRepo.findAll();
@@ -73,10 +78,26 @@ public class UserService {
     }
 
     public UserDto login(UserLoginRequest userLoginRequest) {
-        return null;
+        Optional<User> optionalUser =  userRepo.findByUsername(userLoginRequest.getUsername());
+
+        if (optionalUser.isEmpty() || !passwordEncoder.matches(userLoginRequest.getPassword(), optionalUser.get().getPassword()))
+        {
+            throw new InvalidCredentialsException("Username or password mismatch!");
+        }
+
+        return UserMapper.toUserDto(optionalUser.get());
     }
 
     public void register(@Valid UserRegisterRequest userRegisterRequest) {
-
+        if (userRepo.findByUsername(userRegisterRequest.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
+        User u = new User();
+        u.setUsername(userRegisterRequest.getUsername());
+        u.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+        u.setRole(UserRole.USER);
+        u.setEmail(userRegisterRequest.getEmail());
+        u.setCreatedAt(LocalDateTime.now());
+        userRepo.save(u);
     }
 }

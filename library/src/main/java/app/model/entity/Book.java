@@ -19,8 +19,10 @@ public class Book {
     private Integer publicationYear;
     private Integer copiesAvailable;
 
+    private String coverImageUrl;
+
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @ManyToOne
