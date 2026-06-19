@@ -137,6 +137,11 @@
             <strong>Email: </strong>
             <p th:text="${user.email}">-</p>
           </div>
+          <div class="details-section-container">
+            Role:
+            <p style="font-weight: bold; color: green;" th:text="${user.role}">-</p>
+
+          </div>
         </div>
         <a href="/profile" class="profile-actions-button">
           <p>Edit Profile</p>

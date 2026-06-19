@@ -1,5 +1,8 @@
 package app.service;
 
+import app.exception.AuthorNotFoundException;
+import app.model.dto.AuthorCreateRequest;
+import app.model.dto.AuthorEditRequest;
 import app.model.entity.Author;
 import app.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
@@ -20,8 +23,31 @@ public class AuthorService {
         return authorRepo.findAll();
     }
 
+
     public Author getById(UUID id) {
         return authorRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new AuthorNotFoundException("Author with id [%s] does not exist.".formatted(id)));
+    }
+
+    public Author createAuthor(AuthorCreateRequest request) {
+        Author author = new Author();
+        author.setName(request.getName());
+        author.setBio(request.getBio());
+        return authorRepo.save(author);
+    }
+
+    public Author updateAuthor(UUID id, AuthorEditRequest request) {
+        Author author = getById(id);
+        author.setName(request.getName());
+        author.setBio(request.getBio());
+        return authorRepo.save(author);
+    }
+
+    public void deleteAuthor(UUID id) {
+        authorRepo.deleteById(id);
+    }
+
+    public List<Author> searchByName(String search) {
+       return authorRepo.findByNameContainingIgnoreCase(search);
     }
 }

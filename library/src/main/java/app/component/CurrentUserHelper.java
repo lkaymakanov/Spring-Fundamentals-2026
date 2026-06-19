@@ -28,6 +28,12 @@ public class CurrentUserHelper {
         }
     }
 
+    public boolean isLogged(HttpSession session){
+        UserDto user = get(session);
+        return user != null;
+    }
+
+
     public boolean isAdmin(HttpSession session) {
         UserDto user = get(session);
         return user != null && user.getRole() == UserRole.ADMIN;

@@ -92,6 +92,10 @@ public class UserService {
         if (userRepo.findByUsername(userRegisterRequest.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException("Username already exists");
         }
+
+        if (userRepo.findByEmail(userRegisterRequest.getEmail()).isPresent()) {
+            throw new UsernameAlreadyExistsException("User with that email already exists");
+        }
         User u = new User();
         u.setUsername(userRegisterRequest.getUsername());
         u.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));

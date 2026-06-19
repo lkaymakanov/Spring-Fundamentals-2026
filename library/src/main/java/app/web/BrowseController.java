@@ -1,6 +1,9 @@
 package app.web;
 
 import app.component.CurrentUserHelper;
+import app.model.dto.AuthorCreateRequest;
+import app.model.dto.AuthorEditRequest;
+import app.model.entity.Author;
 import app.model.entity.Book;
 import app.service.AuthorService;
 import app.service.BookService;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class BrowseController {
@@ -41,12 +45,46 @@ public class BrowseController {
         modelAndView.addObject("books", books);
         modelAndView.addObject("search", search);
         modelAndView.addObject("isAdmin", currentUser.isAdmin(session));
+        modelAndView.addObject("isLogged", currentUser.isLogged(session));
 
         // Only fetch authors if admin (for the modals)
         if (currentUser.isAdmin(session)) {
             modelAndView.addObject("authors", authorService.getAllAuthors());
             modelAndView.addObject("bookCreateRequest", BookCreateRequest.builder().build());
             modelAndView.addObject("bookEditRequest", BookEditRequest.builder().build());
+        }
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/authors")
+    public ModelAndView browseAuthors(@RequestParam(value = "search", required = false) String search,
+                                      HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("author-management");
+
+        List<Author> authors;
+        if (search != null && !search.isBlank()) {
+            authors = authorService.searchByName(search);
+        } else {
+            authors = authorService.getAllAuthors();
+        }
+        modelAndView.addObject("authors", authors);
+        modelAndView.addObject("search", search);
+        modelAndView.addObject("isAdmin", currentUser.isAdmin(session));
+
+        if (currentUser.isAdmin(session)) {
+            modelAndView.addObject("authorCreateRequest", AuthorCreateRequest.builder().build());
+            modelAndView.addObject("authorEditRequest", AuthorEditRequest.builder().build());
+
+            // Pass book counts per author for the "delete guard" message
+            java.util.Map<UUID, Long> bookCounts = new java.util.HashMap<>();
+            bookService.getAllBooks().forEach(book -> {
+                if (book.getAuthor() != null) {
+                    bookCounts.merge(book.getAuthor().getId(), 1L, Long::sum);
+                }
+            });
+            modelAndView.addObject("bookCounts", bookCounts);
         }
 
         return modelAndView;

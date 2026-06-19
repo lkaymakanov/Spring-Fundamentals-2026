@@ -24,11 +24,17 @@ public class BookController {
     private final AuthorService authorService;
     private final CurrentUserHelper currentUser;
 
-    public BookController(BookService bookService, AuthorService authorService, CurrentUserHelper currentUser) {
+    public BookController(BookService bookService,
+                          AuthorService authorService,
+                          CurrentUserHelper currentUser) {
         this.bookService = bookService;
         this.authorService = authorService;
         this.currentUser = currentUser;
     }
+
+
+
+
 
     @PostMapping("/create")
     public ModelAndView createBook(@Valid @ModelAttribute("bookCreateRequest") BookCreateRequest request,
