@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
+    <link rel="stylesheet" type="text/css" href="/css/home-common.css">
+    <link rel="stylesheet" type="text/css" href="/css/books.css">
+    <title>Browse Books - Library</title>
+</head>
+<body>
+<main>
+    <!--user nav menu side bar. Shown when user is not logged!-->
+    <th:block th:if="${!isLogged}">
+        <div class="nav-bar">
+            <div class="side-bar-container">
+                <nav>
+                    <div class="side_navbar">
+                        <div class="func-block">
+                            <a href="/">
+                                <p>Dashboard</p>
+                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"></path>
+                                </svg>
+                            </a>
+                            <a href="/login" class="active">
+                                <p>Login</p>
+                            </a>
+                            <a href="/register" class="active">
+                                <p>Register</p>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </th:block>
+
+    <!--user nav menu side bar. Shown when user is logged!-->
+    <th:block th:if="${isLogged}">
+    <div class="nav-bar">
+        <div class="side-bar-container">
+            <nav>
+                <div class="side_navbar">
+                    <div class="func-block">
+                        <a href="/home">
+                            <p>Dashboard</p>
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"></path>
+                            </svg>
+                        </a>
+                        <a href="/books" class="active">
+                            <p>Browse Books</p>
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 1 0 0-2H7a1 1 0 1 1 0-2h12V2H6Z"></path>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Admin section only shown if user is admin -->
+                    <div th:if="${isAdmin}" class="func-block admin-func-block">
+                        <span>Admin</span>
+                        <a href="/authors">
+                            <p>Manage Authors</p>
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm-4 7a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7Z"></path>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="func-block">
+                        <a class="logout" href="/logout">
+                            <p>Logout</p>
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H8m12 0-4 4m4-4-4-4M9 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h2"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    </th:block>
+
+    <div class="home-section">
+        <!-- Flash messages -->
+        <div th:if="${successMessage}" class="success-banner">
+            <span th:text="${successMessage}">Success!</span>
+        </div>
+        <div th:if="${errorMessage}" class="error-banner">
+            <span th:text="${errorMessage}">Error</span>
+        </div>
+
+        <div class="page-header">
+            <div>
+                <h1>📚 Browse Books</h1>
+                <p>Discover your next great read from our catalog.</p>
+            </div>
+            <!-- Add button only for admins -->
+            <button th:if="${isAdmin}" class="button primary-btn" onclick="document.getElementById('addModal').classList.add('open')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Add New Book
+            </button>
+        </div>
+
+        <div class="search-bar">
+            <form action="/books" method="get">
+                <input type="text" name="search" placeholder="Search books by title..." th:value="${search}">
+                <button type="submit" class="button">Search</button>
+            </form>
+        </div>
+
+        <div th:if="${#lists.isEmpty(books)}" class="empty-state">
+            <p>No books found. Try a different search term.</p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(books)}" class="books-grid">
+            <div class="book-card" th:each="book : ${books}">
+                <div class="book-cover">
+                    <img th:src="${book.coverImageUrl != null ? book.coverImageUrl : '/images/book-placeholder.png'}"
+                         th:alt="${book.title}">
+                </div>
+                <div class="book-info">
+                    <h3 th:text="${book.title}">Title</h3>
+                    <p class="book-author" th:text="${book.author.name}">Author</p>
+                    <p class="book-meta">
+                        <span th:text="${book.publicationYear}">Year</span> · ISBN <span th:text="${book.isbn}">-</span>
+                    </p>
+                    <div class="book-footer">
+            <span class="badge" th:classappend="${book.copiesAvailable > 0} ? 'badge-success' : 'badge-danger'">
+              <span th:text="${book.copiesAvailable}">0</span> available
+            </span>
+                        <!-- Admin actions: shown only for admins -->
+                        <div th:if="${isAdmin}" class="admin-actions">
+                            <button class="icon-btn edit-btn"
+                                    th:attr="data-id=${book.id},
+                               data-title=${book.title},
+                               data-isbn=${book.isbn},
+                               data-year=${book.publicationYear},
+                               data-copies=${book.copiesAvailable},
+                               data-cover=${book.coverImageUrl},
+                               data-author=${book.author.id}"
+                                    onclick="openEditModal(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586Z"/>
+                                </svg>
+                            </button>
+                            <form th:action="@{/admin/books/delete/{id}(id=${book.id})}" method="post" style="display:inline"
+                                  onsubmit="return confirm('Delete this book?');">
+                                <button type="submit" class="icon-btn delete-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modals: only rendered if user is admin -->
+<th:block th:if="${isAdmin}">
+    <!-- ADD MODAL -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Book</h2>
+                <button class="close-btn" type="button" onclick="document.getElementById('addModal').classList.remove('open')">&times;</button>
+            </div>
+            <form th:action="@{/admin/books/create}" th:object="${bookCreateRequest}" method="post" class="modal-form">
+                <div class="form-group">
+                    <label for="addTitle">Title <span class="required">*</span></label>
+                    <input type="text" id="addTitle" th:field="*{title}" required>
+                </div>
+                <div class="form-group">
+                    <label for="addIsbn">ISBN <span class="required">*</span></label>
+                    <input type="text" id="addIsbn" th:field="*{isbn}" required>
+                </div>
+                <div class="form-group">
+                    <label for="addYear">Publication Year <span class="required">*</span></label>
+                    <input type="number" id="addYear" th:field="*{publicationYear}" min="1000" max="2100" required>
+                </div>
+                <div class="form-group">
+                    <label for="addCopies">Copies Available <span class="required">*</span></label>
+                    <input type="number" id="addCopies" th:field="*{copiesAvailable}" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="addCover">Cover Image URL</label>
+                    <input type="text" id="addCover" th:field="*{coverImageUrl}" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label for="addAuthor">Author <span class="required">*</span></label>
+                    <select id="addAuthor" th:field="*{authorId}" required>
+                        <option value="">-- Select an author --</option>
+                        <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="button secondary-btn" onclick="document.getElementById('addModal').classList.remove('open')">Cancel</button>
+                    <button type="submit" class="button primary-btn">Add Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Book</h2>
+                <button class="close-btn" type="button" onclick="document.getElementById('editModal').classList.remove('open')">&times;</button>
+            </div>
+            <form id="editForm" method="post" class="modal-form">
+                <div class="form-group">
+                    <label for="editTitle">Title <span class="required">*</span></label>
+                    <input type="text" id="editTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="editIsbn">ISBN <span class="required">*</span></label>
+                    <input type="text" id="editIsbn" name="isbn" required>
+                </div>
+                <div class="form-group">
+                    <label for="editYear">Publication Year <span class="required">*</span></label>
+                    <input type="number" id="editYear" name="publicationYear" min="1000" max="2100" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCopies">Copies Available <span class="required">*</span></label>
+                    <input type="number" id="editCopies" name="copiesAvailable" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCover">Cover Image URL</label>
+                    <input type="text" id="editCover" name="coverImageUrl">
+                </div>
+                <div class="form-group">
+                    <label for="editAuthor">Author <span class="required">*</span></label>
+                    <select id="editAuthor" name="authorId" required>
+                        <option value="">-- Select an author --</option>
+                        <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="button secondary-btn" onclick="document.getElementById('editModal').classList.remove('open')">Cancel</button>
+                    <button type="submit" class="button primary-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<div class="footer"><p>© 2026 Spring course library. All rights reserved.</p></div>
+
+<script>
+    function openEditModal(btn) {
+        const form = document.getElementById('editForm');
+        const id = btn.getAttribute('data-id');
+        form.action = '/admin/books/edit/' + id;
+        document.getElementById('editTitle').value = btn.getAttribute('data-title');
+        document.getElementById('editIsbn').value = btn.getAttribute('data-isbn');
+        document.getElementById('editYear').value = btn.getAttribute('data-year');
+        document.getElementById('editCopies').value = btn.getAttribute('data-copies');
+        document.getElementById('editCover').value = btn.getAttribute('data-cover') || '';
+        document.getElementById('editAuthor').value = btn.getAttribute('data-author');
+        document.getElementById('editModal').classList.add('open');
+    }
+
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', e => {
+            if (e.target === modal) modal.classList.remove('open');
+        });
+    });
+</script>
+</body>
+</html>
