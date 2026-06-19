@@ -133,9 +133,16 @@
                         <span th:text="${book.publicationYear}">Year</span> · ISBN <span th:text="${book.isbn}">-</span>
                     </p>
                     <div class="book-footer">
-            <span class="badge" th:classappend="${book.copiesAvailable > 0} ? 'badge-success' : 'badge-danger'">
-              <span th:text="${book.copiesAvailable}">0</span> available
-            </span>
+                    <span class="badge" th:classappend="${book.copiesAvailable > 0} ? 'badge-success' : 'badge-danger'">
+                      <span th:text="${book.copiesAvailable}">0</span> available
+                    </span>
+
+                        <!-- Borrow button: logged in + has copies -->
+                        <form th:if="${isLogged and book.copiesAvailable > 0}"
+                              th:action="@{/books/{id}/borrow(id=${book.id})}" method="post" style="display:inline">
+                            <button type="submit" class="borrow-btn">Borrow</button>
+                        </form>
+
                         <!-- Admin actions: shown only for admins -->
                         <div th:if="${isAdmin}" class="admin-actions">
                             <button class="icon-btn edit-btn"

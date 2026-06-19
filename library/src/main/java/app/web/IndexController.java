@@ -6,6 +6,7 @@ import app.model.dto.UserLoginRequest;
 import app.model.dto.UserRegisterRequest;
 import app.model.entity.Book;
 import app.service.BookService;
+import app.service.BorrowRecordService;
 import app.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,10 +25,15 @@ public class IndexController {
 
     private final UserService userService;
     private final BookService bookService;
+    private final BorrowRecordService borrowService;
     private final CurrentUserHelper currentUserHelper;
 
-    public IndexController(UserService userService, BookService bookService, CurrentUserHelper currentUserHelper) {
+    public IndexController(UserService userService,
+                           BookService bookService,
+                           BorrowRecordService borrowService,
+                           CurrentUserHelper currentUserHelper) {
         this.bookService = bookService;
+        this.borrowService = borrowService;
         this.userService = userService;
         this.currentUserHelper = currentUserHelper;
     }
@@ -114,11 +120,14 @@ public class IndexController {
 
         List<Book> allBooks = bookService.getAllBooks();
 
+
+
+
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("user", user);
         modelAndView.addObject("books", allBooks);
-        modelAndView.addObject("borrowedCount", 0);
-        modelAndView.addObject("dueSoonCount", 0);
+        modelAndView.addObject("borrowedCount", borrowService.getActiveBorrowCount(userUUID));
+        modelAndView.addObject("dueSoonCount", borrowService.getOverdueCount(userUUID));
         modelAndView.addObject("isAdmin", currentUserHelper.isAdmin(httpSession));
         return modelAndView;
     }

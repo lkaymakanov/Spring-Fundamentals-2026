@@ -1,0 +1,70 @@
+.page-header {
+    margin-bottom: 24px;
+    padding: 24px 28px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.page-header h1 { margin: 0 0 4px 0; color: #166088; font-size: 1.6rem; }
+.page-header p { margin: 0; color: #666; font-size: 0.95rem; }
+
+.stats-row { display: flex; gap: 16px; margin-bottom: 20px; }
+.stat-pill {
+    background: #fff; padding: 16px 24px; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex; flex-direction: column; align-items: center; min-width: 120px;
+}
+.stat-pill-danger { background: #fdecea; }
+.stat-pill-danger .stat-value { color: #b71c1c; }
+.stat-label { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.stat-value { font-size: 2rem; font-weight: 700; color: #166088; }
+
+.borrows-list { display: flex; flex-direction: column; gap: 12px; }
+
+.borrow-row {
+    background: #fff; border-radius: 12px; padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: grid; grid-template-columns: 80px 1fr auto;
+    gap: 16px; align-items: center; border-left: 4px solid #166088;
+    transition: transform 0.2s;
+}
+.borrow-row:hover { transform: translateX(4px); }
+.borrow-row.overdue { border-left-color: #b71c1c; background: #fef5f5; }
+.borrow-row.returned { border-left-color: #ccc; opacity: 0.75; }
+
+.borrow-cover {
+    width: 80px; height: 110px; object-fit: cover;
+    border-radius: 6px; background: #f0f0f0;
+}
+
+.borrow-info h3 { margin: 0 0 4px 0; font-size: 1.05rem; color: #1a1a1a; }
+.borrow-author { margin: 0 0 6px 0; color: #666; font-size: 0.85rem; font-style: italic; }
+.borrow-dates { margin: 0; font-size: 0.85rem; color: #555; }
+.borrow-dates span { margin-right: 4px; }
+
+.borrow-status { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
+.badge-success { background: #d4edda; color: #155724; }
+.badge-danger { background: #f8d7da; color: #721c24; }
+.badge-secondary { background: #e0e0e0; color: #555; }
+.days-info { font-size: 0.8rem; color: #666; }
+
+.return-btn {
+    background: #166088; color: white; border: none;
+    padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer;
+}
+.return-btn:hover { background: #0d4a6a; }
+
+.empty-state {
+    background: #fff; padding: 60px 20px; border-radius: 12px;
+    text-align: center; color: #888;
+}
+.empty-state a { color: #166088; text-decoration: none; font-weight: 700; }
+.empty-state a:hover { text-decoration: underline; }
+
+.success-banner { background: #d4edda; color: #155724; padding: 12px 20px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #c3e6cb; font-weight: 700; }
+.error-banner { background: #fdecea; color: #b71c1c; padding: 12px 20px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #f5c2c0; font-weight: 700; }
+
+.library-nav-bar { text-align: center; padding: 12px 0; margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
+.library-nav-bar-name { font-size: 1.2rem; font-weight: 700; color: #166088; }
+.library-nav-bar-version { font-size: 0.75rem; color: #888; }

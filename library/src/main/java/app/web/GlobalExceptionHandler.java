@@ -10,6 +10,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler({BookNotAvailableException.class, BorrowLimitException.class, DuplicateBorrowException.class})
+    public ModelAndView handleBorrowErrors(RuntimeException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return new ModelAndView("redirect:/books");
+    }
+
+    @ExceptionHandler(BorrowNotFoundException.class)
+    public ModelAndView handleBorrowNotFound(BorrowNotFoundException ex, HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("error");
+        mav.addObject("statusCode", 404);
+        mav.addObject("errorTitle", "Borrow Record Not Found");
+        mav.addObject("errorMessage", ex.getMessage());
+        mav.addObject("path", request.getRequestURI());
+        return mav;
+    }
 
 
     @ExceptionHandler(AuthorNotFoundException.class)

@@ -330,3 +330,12 @@ html body .modal.open {
     font-size: 0.75rem;
     color: #888;
 }
+
+.borrow-btn {
+    background: #2a9d8f; color: white; border: none;
+    padding: 6px 14px; border-radius: 6px;
+    font-weight: 700; font-size: 0.85rem; cursor: pointer;
+    transition: background 0.2s;
+}
+.borrow-btn:hover { background: #21867a; }
+.unavailable-label { color: #999; font-size: 0.8rem; font-style: italic; }

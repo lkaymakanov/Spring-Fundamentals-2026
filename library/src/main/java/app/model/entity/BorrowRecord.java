@@ -30,4 +30,10 @@ public class BorrowRecord {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BorrowStatus status; // BORROWED, RETURNED, LATE
+
+
+    public boolean isOverdue() {
+        return status == BorrowStatus.BORROWED
+                && LocalDateTime.now().isAfter(dueDate);
+    }
 }

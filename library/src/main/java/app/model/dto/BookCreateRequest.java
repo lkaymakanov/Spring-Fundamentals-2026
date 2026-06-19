@@ -2,7 +2,6 @@ package app.model.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.util.UUID;
 
 @Getter
@@ -17,7 +16,7 @@ public class BookCreateRequest {
     private String title;
 
     @NotBlank(message = "ISBN is required")
-    @Size(min = 10, max = 20, message = "ISBN must be between 10 and 20 characters")
+    @Size(min = 5, max = 20, message = "ISBN must be between 5 and 20 characters")
     private String isbn;
 
     @NotNull(message = "Publication year is required")

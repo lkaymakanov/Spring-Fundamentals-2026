@@ -38,4 +38,8 @@ public class CurrentUserHelper {
         UserDto user = get(session);
         return user != null && user.getRole() == UserRole.ADMIN;
     }
+
+    public UUID getUserId(HttpSession session) {
+        return (UUID) session.getAttribute("user_id");
+    }
 }

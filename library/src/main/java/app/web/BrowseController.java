@@ -77,15 +77,15 @@ public class BrowseController {
             modelAndView.addObject("authorCreateRequest", AuthorCreateRequest.builder().build());
             modelAndView.addObject("authorEditRequest", AuthorEditRequest.builder().build());
 
-            // Pass book counts per author for the "delete guard" message
-            java.util.Map<UUID, Long> bookCounts = new java.util.HashMap<>();
-            bookService.getAllBooks().forEach(book -> {
-                if (book.getAuthor() != null) {
-                    bookCounts.merge(book.getAuthor().getId(), 1L, Long::sum);
-                }
-            });
-            modelAndView.addObject("bookCounts", bookCounts);
         }
+        // Pass book counts per author for the "delete guard" message
+        java.util.Map<UUID, Long> bookCounts = new java.util.HashMap<>();
+        bookService.getAllBooks().forEach(book -> {
+            if (book.getAuthor() != null) {
+                bookCounts.merge(book.getAuthor().getId(), 1L, Long::sum);
+            }
+        });
+        modelAndView.addObject("bookCounts", bookCounts);
 
         return modelAndView;
     }
