@@ -1,0 +1,7 @@
+--build project
+mvn clean package -DskipTests
+
+--run
+java -jar library-0.0.1-SNAPSHOT.jar
+
+

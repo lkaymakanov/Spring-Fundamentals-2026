@@ -12,9 +12,6 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, UUID
     List<BorrowRecord> findByUserId(UUID userId);
     List<BorrowRecord> findByBookId(UUID bookId);
 
-
-
-
     List<BorrowRecord> findByUserIdOrderByBorrowDateDesc(UUID userId);
 
     @Query("SELECT b FROM BorrowRecord b WHERE b.user.id = :userId AND b.returnDate IS NULL")

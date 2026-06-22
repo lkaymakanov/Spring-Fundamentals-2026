@@ -10,6 +10,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ModelAndView handleInvalidPassword(InvalidPasswordException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return new ModelAndView("redirect:/profile");
+    }
+
     @ExceptionHandler({BookNotAvailableException.class, BorrowLimitException.class, DuplicateBorrowException.class})
     public ModelAndView handleBorrowErrors(RuntimeException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());

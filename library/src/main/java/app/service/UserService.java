@@ -1,8 +1,11 @@
 package app.service;
 
 import app.exception.InvalidCredentialsException;
+import app.exception.InvalidPasswordException;
+import app.exception.UserNotFoundException;
 import app.exception.UsernameAlreadyExistsException;
 import app.mapper.UserMapper;
+import app.model.dto.ChangePasswordRequest;
 import app.model.dto.UserDto;
 import app.model.dto.UserLoginRequest;
 import app.model.dto.UserRegisterRequest;
@@ -34,7 +37,29 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public void changePassword(UUID userId, ChangePasswordRequest request) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        // 1. Verify current password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect");
+        }
+
+        // 2. Verify new password is different
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("New password must be different from the current one");
+        }
+
+        // 3. Verify confirmation matches
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new InvalidPasswordException("Passwords do not match");
+        }
+
+        // 4. Encode and save
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepo.save(user);
+    }
 
     public List<User> findAll() {
         return userRepo.findAll().stream().collect(Collectors.toList());
