@@ -1,6 +1,7 @@
 # Spring-Fundamentals-2026
 # 📚 Library Management System (LMS)
 
+
 A full-stack web application for managing library operations, including book inventory, user borrowing tracking, fine management, and book reviews.
 
 ## 🛠 Technical Specifications
@@ -22,6 +23,9 @@ A full-stack web application for managing library operations, including book inv
 ---
 
 ## 🗄 Database Architecture
+
+Db Diagram
+<img src="images/db_diagram.png" width="400"/>
 
 The system uses a relational MySQL database with the following entity map:
 
